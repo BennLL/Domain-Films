@@ -15,7 +15,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import HomeNavbar from '../components/HomeNavbar'
 import LoadingOverlay from '../components/LoadingOverlay'
 import { LinearGradient } from 'expo-linear-gradient'
-import theme from '../utils/theme'
+import {theme} from '../utils/theme'
 import { generateRecommendations } from '../utils/recommendations'
 import Popup from '../components/popup' 
 

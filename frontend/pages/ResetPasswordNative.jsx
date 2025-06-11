@@ -21,7 +21,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import theme from '../utils/theme';
+import {theme} from '../utils/theme';
 
 const ResetPasswordNative = ({ navigation, route }) => {
   // State variables

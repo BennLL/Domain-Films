@@ -18,7 +18,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import theme from '../utils/theme';
+import {theme} from '../utils/theme';
 import Header from '../components/Header';
 
 import Popup from '../components/popup'; 

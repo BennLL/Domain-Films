@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { jwtDecode } from 'jwt-decode'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import theme from '../utils/theme'
+import {theme} from '../utils/theme'
 
 const ProfileDropdown = ({ userID }) => {
   const [isOpen, setIsOpen] = useState(false)

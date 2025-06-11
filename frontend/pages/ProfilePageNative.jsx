@@ -12,7 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { validateEmail } from '../utils/validateEmail';
-import theme from '../utils/theme';
+import {theme }from '../utils/theme';
 import { s3, BUCKET_NAME } from '../aws-config';
 import HomeNavbar from '../components/HomeNavbar';
 import { LinearGradient } from 'expo-linear-gradient';

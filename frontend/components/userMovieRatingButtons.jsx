@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions } from 'react-native'
 import { addMovieRatings } from '../utils/calcRatings'
 import Icon from 'react-native-vector-icons/Feather'
-import theme from '../utils/theme'
+import {theme} from '../utils/theme'
 import '../globals.css'
 
 const UserRatingButtons = ({ defaultRating, onSetRating }) => {

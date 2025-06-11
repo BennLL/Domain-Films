@@ -21,7 +21,7 @@ import {
   Image,
 } from 'react-native';
 import { validateEmail } from '../utils/validateEmail';
-import theme from '../utils/theme';
+import {theme }from '../utils/theme';
 import Header from '../components/Header';
 import LoadingOverlay from '../components/LoadingOverlay';
 import Popup from '../components/popup'; 

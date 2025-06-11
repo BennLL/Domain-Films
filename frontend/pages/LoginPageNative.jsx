@@ -23,10 +23,12 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validateEmail } from '../utils/validateEmail';
-import theme from '../utils/theme';
+import { theme, theme2 } from '../utils/theme';
 import Header from '../components/Header';
 import LoadingOverlay from '../components/LoadingOverlay';
-import Popup from '../components/popup'; 
+import Popup from '../components/popup';
+import { LinearGradient } from 'expo-linear-gradient'
+
 
 const LoginPageNative = ({ navigation }) => {
   // State variables
@@ -87,7 +89,7 @@ const LoginPageNative = ({ navigation }) => {
 
       if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
       setPopupMessage('Login successful');
-      setPopupVisible(true); 
+      setPopupVisible(true);
       const data = await res.json();
       console.log('Data:', data);
 
@@ -101,7 +103,7 @@ const LoginPageNative = ({ navigation }) => {
     } catch (error) {
       console.error('Error (unable to login): ', error);
       setPopupMessage('Login failed: Invalid email or password');
-      setPopupVisible(true); 
+      setPopupVisible(true);
     }
     setLoading(false);
   };
@@ -114,73 +116,70 @@ const LoginPageNative = ({ navigation }) => {
   };
 
   return (
+
     <View style={styles.container}>
+
       {/* Loading overlay */}
       {loading && <LoadingOverlay visible={loading} />}
       <View style={styles.overlay} />
-      <Image
-        source={{
-          uri: 'https://wallpapers.com/images/hd/movie-poster-background-wg5mxe6b7djul0a8.jpg',
-        }}
-        style={styles.backgroundImage}
-        resizeMode="cover"
-      />
-      <Header />
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.form}>
-          <Text style={styles.title}>Login</Text>
-          {/* Email input */}
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            onBlur={() => {
-              if (email && !validateEmail(email)) {
-                setPopupMessage('Invalid Email: Please enter a valid email address');
-                setPopupVisible(true); 
-              }
-            }}
-          />
-          {/* Password input */}
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={handleLogin} // Submit on Enter key
-          />
-          {/* Forgot Password link */}
-          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
-          {/* Login button */}
-          <TouchableOpacity
-            onPress={handleLogin}
-            style={styles.loginButton}
-            activeOpacity={0.8}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          {/* Sign Up link */}
-          <Text style={styles.signUpText}>
-            Don't have an account yet?{' '}
-            <Text style={styles.signUpLink} onPress={handleSignUp}>
-              Sign up!
+      <LinearGradient colors={theme.gradient} style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.form}>
+            <Text style={styles.brandTitle}>DomainFilms</Text>
+            <Text style={styles.title}>Login</Text>
+            {/* Email input */}
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              onBlur={() => {
+                if (email && !validateEmail(email)) {
+                  setPopupMessage('Invalid Email: Please enter a valid email address');
+                  setPopupVisible(true);
+                }
+              }}
+            />
+            {/* Password input */}
+            <TextInput
+              
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              onSubmitEditing={handleLogin} // Submit on Enter key
+            />
+            {/* Forgot Password link */}
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            </TouchableOpacity>
+            {/* Login button */}
+            <TouchableOpacity
+              onPress={handleLogin}
+              style={styles.loginButton}
+              activeOpacity={0.8}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            {/* Sign Up link */}
+            <Text style={styles.signUpText}>
+              Don't have an account yet?{' '}
+              <Text style={styles.signUpLink} onPress={handleSignUp}>
+                Sign up!
+              </Text>
             </Text>
-          </Text>
-        </View>
-      </ScrollView>
-
+          </View>
+        </ScrollView>
+      </LinearGradient>
       {/* Popup Component */}
       <Popup
         visible={popupVisible}
         title="Notification"
         message={popupMessage}
-        onClose={() => setPopupVisible(false)} 
+        onClose={() => setPopupVisible(false)}
       />
     </View>
   );
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   title: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
@@ -263,6 +262,17 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
+  brandTitle: {
+    fontSize: 50,
+    fontWeight: '900',
+    color: theme.primaryColor,
+    textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: '#00000050',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 0,
+  },
+
 });
 
 export default LoginPageNative;

@@ -18,7 +18,7 @@ import { API_URL, ACCESS_TOKEN } from '../pages/api'
 import { useNavigation } from '@react-navigation/native'
 import HomeNavbar from '../components/HomeNavbar'
 import { LinearGradient } from 'expo-linear-gradient'
-import theme from '../utils/theme'
+import {theme} from '../utils/theme'
 
 const SearchResultsPage = ({ route }) => {
   const { searchTerm, filteredMovies = [], filteredShows = [], userID } = route.params

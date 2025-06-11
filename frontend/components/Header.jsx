@@ -1,32 +1,34 @@
-import React from 'react'
-import { View, Text, StyleSheet, Platform } from 'react-native'
-import theme from '../utils/theme'
+import React from 'react';
+import { View, Text, StyleSheet, Platform, StatusBar } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { theme2} from '../utils/theme';
+
 const Header = () => {
   return (
-    <View style={styles.header}>
+    <LinearGradient colors={themeReverse.gradient} style={styles.header}>
       <Text style={styles.title}>DomainFilms</Text>
-    </View>
-  )
-}
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    padding: 10,
-    backgroundColor: theme.primaryColor,
-    alignItems: 'flex-start',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 30 : 40,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
     justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    position: 'absolute',
-    top: 0,
+    alignItems: 'flex-start',
+    zIndex: 10,
   },
   title: {
-    fontSize: 24,
-    padding: 5,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme2.textColor,
+    textShadowColor: '#00000060',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
-})
+});
 
-export default Header
+export default Header;
