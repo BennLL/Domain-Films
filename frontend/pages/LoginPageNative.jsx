@@ -28,9 +28,14 @@ import Header from '../components/Header';
 import LoadingOverlay from '../components/LoadingOverlay';
 import Popup from '../components/popup';
 import { LinearGradient } from 'expo-linear-gradient'
+import { getItems, getMovies, getShows, API_URL, ACCESS_TOKEN, } from './api';
+import { useRef } from 'react';
 
 
 const LoginPageNative = ({ navigation }) => {
+  const [movies, setMovies] = useState([]); // Movies
+  const scrollRef = useRef(null);
+  const [scrollIndex, setScrollIndex] = useState(0);
   // State variables
   const [email, setEmail] = useState(''); // User's email input
   const [password, setPassword] = useState(''); // User's password input
@@ -38,6 +43,53 @@ const LoginPageNative = ({ navigation }) => {
   const [popupVisible, setPopupVisible] = useState(false); // State to control popup visibility
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const app_url = process.env.APP_URL; // Backend API URL
+
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const movieItems = await getMovies();
+      setMovies(shuffleMovies(movieItems));
+    }
+    fetchMovies();
+  }, []); // Fetch movies on component mount
+
+  const shuffleMovies = (arr) => {
+    let array = [...arr];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  // Automatically scroll through movies every 3.0 seconds
+  useEffect(() => {
+    if (movies.length === 0) return;
+
+    const interval = setInterval(() => {
+      setScrollIndex((prevIndex) => (prevIndex + 1) % movies.length);
+    }, 3000); // change every 3.5 seconds for example
+
+    return () => clearInterval(interval);
+  }, [movies]);
+
+
+  const renderPreviewItem = ({ item }) => {
+    const hasImage = ImageTags?.primary;
+    const imageUrl = `${API_URL}/Items/${item.Id}/Images/Primary?api_key=${ACCESS_TOKEN}`
+    if (!hasImage) {
+      return null;
+    }
+
+    return (
+      <View>
+        <Image source={{ uri: imageUrl }} style={styles.mediaImage} />
+        <Text style={styles.mediaName} numberOfLines={2} ellipsizeMode="tail">
+          {item.Name}
+        </Text>
+      </View>
+    );
+  }
 
   /**
    * authUser - Authenticates the user session using a stored token.
@@ -124,6 +176,29 @@ const LoginPageNative = ({ navigation }) => {
       <View style={styles.overlay} />
       <LinearGradient colors={theme.gradient} style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.previewContainer}>
+            <Text style={styles.previewTitle}>Watch Your Favorite Shows</Text>
+            <View style={styles.singlePreviewContainer}>
+              {movies.length > 0 && (
+                <View key={movies[scrollIndex].Id} style={{ alignItems: 'center' }}>
+                  <Image
+                    source={{ uri: `${API_URL}/Items/${movies[scrollIndex].Id}/Images/Primary?api_key=${ACCESS_TOKEN}` }}
+                    style={styles.mediaImage}
+                  />
+                  <Text
+                    style={styles.mediaName}
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                  >
+                    {movies[scrollIndex].Name}
+                  </Text>
+                </View>
+              )}
+            </View>
+
+
+
+          </View>
           <View style={styles.form}>
             <Text style={styles.brandTitle}>DomainFilms</Text>
             <Text style={styles.title}>Login</Text>
@@ -143,7 +218,7 @@ const LoginPageNative = ({ navigation }) => {
             />
             {/* Password input */}
             <TextInput
-              
+
               style={styles.input}
               placeholder="Password"
               secureTextEntry
@@ -192,6 +267,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   scrollContainer: {
+    flexDirection: 'row',
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -201,13 +277,15 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
     padding: 50,
-    borderRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 10,
+    height: 500,
   },
   title: {
     fontSize: 20,
@@ -252,12 +330,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'gray',
   },
-  backgroundImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    opacity: 0.7,
-  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -272,6 +344,50 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 0,
   },
+  previewContainer: {
+    padding: 50,
+    backgroundColor: 'black',
+    border: '1px solid black',
+    width: '100%',
+    maxWidth: 500,
+    height: 500,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+  },
+  previewTitle: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  mediaImage: {
+    width: 200,
+    height: 300,
+    borderRadius: 10,
+    backgroundColor: '#333',
+  },
+  mediaName: {
+    marginTop: 8,
+    width: 150,
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  singlePreviewContainer: {
+    width: 200,  // match mediaImage width
+    height: 350, // mediaImage height + some space for text
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 10,
+    marginHorizontal: 'auto',
+  },
+
+
 
 });
 
