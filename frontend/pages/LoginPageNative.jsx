@@ -30,6 +30,7 @@ import Popup from '../components/popup';
 import { LinearGradient } from 'expo-linear-gradient'
 import { getItems, getMovies, getShows, API_URL, ACCESS_TOKEN, } from './api';
 import { useRef } from 'react';
+import { Animated } from 'react-native';
 
 
 
@@ -44,7 +45,7 @@ const LoginPageNative = ({ navigation }) => {
   const [popupVisible, setPopupVisible] = useState(false); // State to control popup visibility
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const app_url = process.env.APP_URL; // Backend API URL
-
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -68,8 +69,19 @@ const LoginPageNative = ({ navigation }) => {
     if (movies.length === 0) return;
 
     const interval = setInterval(() => {
-      setScrollIndex((prevIndex) => (prevIndex + 1) % movies.length);
-    }, 3000); // change every 3.5 seconds for example
+      Animated.timing(fadeAnim, {
+        toValue: 0.1,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start(() => {
+        setScrollIndex((prevIndex) => (prevIndex + 1) % movies.length);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [movies]);
@@ -179,12 +191,17 @@ const LoginPageNative = ({ navigation }) => {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.previewContainer}>
 
-            {/* <Text style={styles.previewTitle}>Watch Your Favorite Shows</Text> */}
             <View style={styles.singlePreviewContainer}>
+              <Text style={styles.previewTitle}>Watch Your Favorite Shows</Text>
               {movies.length > 0 && (
-                <View key={movies[scrollIndex].Id} style={{ alignItems: 'center' }}>
+                <Animated.View
+                  key={movies[scrollIndex].Id}
+                  style={{ alignItems: 'center', opacity: fadeAnim }}
+                >
                   <Image
-                    source={{ uri: `${API_URL}/Items/${movies[scrollIndex].Id}/Images/Primary?api_key=${ACCESS_TOKEN}` }}
+                    source={{
+                      uri: `${API_URL}/Items/${movies[scrollIndex].Id}/Images/Primary?api_key=${ACCESS_TOKEN}`
+                    }}
                     style={styles.mediaImage}
                   />
                   <Text
@@ -194,11 +211,9 @@ const LoginPageNative = ({ navigation }) => {
                   >
                     {movies[scrollIndex].Name}
                   </Text>
-                </View>
+                </Animated.View>
               )}
             </View>
-
-
           </View>
           <View style={styles.form}>
             <Text style={styles.brandTitle}>DomainFilms</Text>
@@ -346,7 +361,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 0,
   },
   previewContainer: {
-    padding: 10,
     backgroundColor: 'white',
     border: '1px solid white',
     width: '100%',
@@ -358,13 +372,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.4,
     shadowRadius: 4,
-    backgroundColor:'#f9f7fa',
+    backgroundColor: '#f9f7fa',
   },
   previewTitle: {
+    width: "100%",
     color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 14,
     textAlign: 'center',
+    fontWeight: '900',
+    textShadowColor: '#00000050',
+    textShadowOffset: { width: 0.9, height: 0.9 },
+    textShadowRadius: 0,
+    marginBottom: 10,
   },
   singlePreviewContainer: {
     width: "100%",
@@ -380,6 +399,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   mediaName: {
+    marginTop: 10,
     width: "100%",
     color: 'black',
     // fontWeight: 'bold',
