@@ -32,6 +32,7 @@ import { getItems, getMovies, getShows, API_URL, ACCESS_TOKEN, } from './api';
 import { useRef } from 'react';
 
 
+
 const LoginPageNative = ({ navigation }) => {
   const [movies, setMovies] = useState([]); // Movies
   const scrollRef = useRef(null);
@@ -177,7 +178,8 @@ const LoginPageNative = ({ navigation }) => {
       <LinearGradient colors={theme.gradient} style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.previewContainer}>
-            <Text style={styles.previewTitle}>Watch Your Favorite Shows</Text>
+
+            {/* <Text style={styles.previewTitle}>Watch Your Favorite Shows</Text> */}
             <View style={styles.singlePreviewContainer}>
               {movies.length > 0 && (
                 <View key={movies[scrollIndex].Id} style={{ alignItems: 'center' }}>
@@ -195,7 +197,6 @@ const LoginPageNative = ({ navigation }) => {
                 </View>
               )}
             </View>
-
 
 
           </View>
@@ -271,7 +272,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    backgroundColor: '#2a0f3f'
   },
   form: {
     width: '100%',
@@ -280,10 +285,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
     elevation: 10,
     height: 500,
   },
@@ -345,9 +346,9 @@ const styles = StyleSheet.create({
     textShadowRadius: 0,
   },
   previewContainer: {
-    padding: 50,
-    backgroundColor: 'black',
-    border: '1px solid black',
+    padding: 10,
+    backgroundColor: 'white',
+    border: '1px solid white',
     width: '100%',
     maxWidth: 500,
     height: 500,
@@ -357,35 +358,39 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.4,
     shadowRadius: 4,
+    backgroundColor:'#f9f7fa',
   },
   previewTitle: {
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  singlePreviewContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
   mediaImage: {
-    width: 200,
-    height: 300,
+    minWidth: 300,
+    minHeight: 400,
     borderRadius: 10,
     backgroundColor: '#333',
   },
   mediaName: {
-    marginTop: 8,
-    width: 150,
-    color: 'white',
-    fontWeight: 'bold',
+    width: "100%",
+    color: 'black',
+    // fontWeight: 'bold',
     fontSize: 14,
+    textAlign: 'center',
+    fontWeight: '900',
+    textShadowColor: '#00000050',
+    textShadowOffset: { width: 0.9, height: 0.9 },
+    textShadowRadius: 0,
   },
-  singlePreviewContainer: {
-    width: 200,  // match mediaImage width
-    height: 350, // mediaImage height + some space for text
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    borderRadius: 10,
-    marginHorizontal: 'auto',
-  },
+
 
 
 
